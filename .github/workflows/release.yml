@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, without the leading v
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    environment: release
+
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Exchange OIDC token for GitHub App token
+        id: app-token
+        uses: astral-sh/release-authenticator-action@main
+        with:
+          url: ${{ vars.RELEASE_AUTHENTICATOR_URL }}
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh release create "v${{ inputs.version }}" \
+            --title "v${{ inputs.version }}" \
+            --generate-notes
