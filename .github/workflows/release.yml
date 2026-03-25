@@ -27,7 +27,7 @@ jobs:
 
       - name: Exchange OIDC token for GitHub App token
         id: app-token
-        uses: astral-sh/release-authenticator-action@main
+        uses: zaniebot/release-authenticator-action@main
         with:
           url: ${{ vars.RELEASE_AUTHENTICATOR_URL }}
 
