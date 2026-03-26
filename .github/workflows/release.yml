@@ -30,6 +30,7 @@ jobs:
         uses: zaniebot/release-authenticator-action@main
         with:
           url: ${{ vars.RELEASE_AUTHENTICATOR_URL }}
+          expires-in: "10"
 
       - name: Create GitHub release
         env:
