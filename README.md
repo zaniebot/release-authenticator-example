@@ -6,9 +6,10 @@ Copy these files into the repository that should be allowed to create releases w
 ## What this example shows
 
 - a `workflow_dispatch` release workflow on `main`
+- a single human-reviewed `release-gate` job
 - exchange of the GitHub Actions OIDC token for a short-lived installation token
 - creation of a GitHub release with that token
-- use of a `release` environment so the Worker can optionally require environment approval
+- a separate `release` environment for the actual release job
 
 ## Expected Worker configuration
 
@@ -30,8 +31,9 @@ In the target repository:
 1. Install the GitHub App on that repository.
 2. Add a repository variable named `RELEASE_AUTHENTICATOR_URL` with the full exchange URL, for example:
    - `https://release-authenticator.<subdomain>.workers.dev/exchange`
-3. Create a GitHub Actions environment named `release` if you want approval gates.
-4. Ensure the workflow runs from the `main` branch.
+3. Create a GitHub Actions environment named `release-gate` with the required human reviewers.
+4. Create a GitHub Actions environment named `release` for the actual release job.
+5. Ensure the workflow runs from the `main` branch.
 
 ## Running the example
 
@@ -41,4 +43,4 @@ From the target repository, dispatch the workflow on `main` with a version strin
 gh workflow run release.yml -f version=1.2.3 --ref main
 ```
 
-The workflow will create a release named `v1.2.3` and the action will revoke the installation token in its post step.
+The workflow will pause once for the `release-gate` approval, then create a release named `v1.2.3`. The action revokes the installation token in its post step.

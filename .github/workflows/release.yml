@@ -11,9 +11,20 @@ on:
 permissions: {}
 
 jobs:
+  release-gate:
+    name: release-gate
+    runs-on: ubuntu-latest
+    environment:
+      name: release-gate
+      deployment: false
+    steps:
+      - run: echo "Release approved"
+
   release:
     name: Create GitHub release
     runs-on: ubuntu-latest
+    needs:
+      - release-gate
     environment: release
 
     permissions:
