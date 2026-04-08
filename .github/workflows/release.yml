@@ -14,9 +14,7 @@ jobs:
   release-gate:
     name: release-gate
     runs-on: ubuntu-latest
-    environment:
-      name: release-gate
-      deployment: false
+    environment: release-gate
     steps:
       - run: echo "Release approved"
 
